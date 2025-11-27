@@ -1,17 +1,12 @@
-# Drive letter
-$Drive = "C"
+# Tjekker C driver
+$drive = Get-PSDrive -Name C
 
-# Threshold in percent
-$Threshold = 10
+# Udregning
+$remainingSpace = ($drive.Free / $drive.Used) * 100
 
-# Get disk info
-$disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$Drive'"
+# Output
+Write-Host "Remaining space on C: drive: $($remainingSpace)%"
 
-# Calculate free percentage
-$freePercent = [math]::Round(($disk.FreeSpace / $disk.Size) * 100, 2)
-
-if ($freePercent -le $Threshold) {
-    Write-Host "Warning: Less than $Threshold% disk space remaining!"
-} else {
-    Write-Host "Disk space is fine. $freePercent% free remaining."
+if ($remainingSpace -lT 10){
+Write-Warning "The remaining space is less than 10%"
 }
